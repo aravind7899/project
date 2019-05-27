@@ -128,7 +128,7 @@ def deleteData(keyspace,table_name):
 	d=dict(urlparse.parse_qsl(request.query_string))
 	j=cs.displayDataJSON(t,d)
 	js=cs.deleteData(t,d)
-	if js="Deleted successfully!!":
+	if js=="Deleted successfully!!":
 		resp = Response({"result":"success","data":j,"message":js}, status=200)
 		return resp
 	else:
