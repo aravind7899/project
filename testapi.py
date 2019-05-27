@@ -84,8 +84,12 @@ def updateData(keyspace,table_name):
 	d=dict(urlparse.parse_qsl(request.query_string))
 	data=json.loads(str(request.data))
 	js=cs.updateData(t,d,data)
-	resp = Response(js, status=200)
-	return resp
+	if js="Updated successfully!!":
+		resp = Response({"result":"success","data":cs.displayDataJSON(t),"message":js}, status=200)
+		return resp
+	else:
+		resp = Response({"result":"failure","message":js}, status=200)
+		return resp
 @app.route('/<keyspace>/<table_name>/display_all',methods=['GET'])
 def getAllDetails(keyspace,table_name):
 	cs.useKeyspace(keyspace)
