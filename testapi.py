@@ -91,7 +91,7 @@ def getAllDetails(keyspace,table_name):
 	cs.useKeyspace(keyspace)
 	t=str(table_name)
 	js=cs.displayDataJSON(t)
-	resp = Response(js, status=200)
+	resp = Response({"result":"success","data":js}, status=200)
 	return resp
 @app.route('/<keyspace>/<table_name>/display/',methods=['GET'])
 def getwithcondition(keyspace,table_name):
@@ -99,7 +99,7 @@ def getwithcondition(keyspace,table_name):
 	t=str(table_name)
 	d=dict(urlparse.parse_qsl(request.query_string))
 	js=cs.displayDataJSON(t,d)
-	resp = Response(js, status=200)
+	resp = Response({"result":"success","data":js}, status=200)
 	return resp
 @app.route('/<keyspace>/<table_name>/insert/<filename>')
 def insertFileData(keyspace,table_name,filename):
@@ -124,7 +124,11 @@ def deleteData(keyspace,table_name):
 	d=dict(urlparse.parse_qsl(request.query_string))
 	j=cs.displayDataJSON(t,d)
 	js=cs.deleteData(t,d)
-	resp = Response(j, status=200)
-	return resp
+	if js="Deleted successfully!!":
+		resp = Response({"result":"success","data":j,"message":js}, status=200)
+		return resp
+	else:
+		resp = Response({"result":"failure","data":j,"message":js}, status=200)
+		return resp
 if __name__ == '__main__':
 	app.run(host="127.0.0.1",port=8081)
