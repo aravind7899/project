@@ -84,7 +84,7 @@ def updateData(keyspace,table_name):
 	d=dict(urlparse.parse_qsl(request.query_string))
 	data=json.loads(str(request.data))
 	js=cs.updateData(t,d,data)
-	if js="Updated successfully!!":
+	if js=="Updated successfully!!":
 		resp = Response({"result":"success","data":cs.displayDataJSON(t),"message":js}, status=200)
 		return resp
 	else:
