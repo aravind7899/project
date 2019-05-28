@@ -13,7 +13,7 @@ def convertRow(Row):
 @app.route('/keyspaces')
 def getAllKeyspaces():
 	ks=cs.showKeyspaces()
-	st='</br>'.join(str(i) for i in ks)
+	st='{"result":"success","data":['+','.join(str(i) for i in ks)+"]}"
 	resp = Response(st, status=200)
 	return resp
 @app.route('/<keyspace>/create_table',methods=['GET','POST'])
@@ -26,18 +26,14 @@ def createtable(keyspace):
 @app.route('/<keyspace>/tables')
 def getAllTables(keyspace):
 	ks=cs.showTables(keyspace)
-	st='</br>'.join(str(i) for i in ks)
+	st='{"result":"success","data":['+','.join(str(i) for i in ks)+"]}"
 	resp = Response(st, status=200)
 	return resp
 @app.route('/<keyspace>/<table_name>/primary_key')
 def getprkeys(keyspace,table_name):
 	cs.useKeyspace(keyspace)
 	t=str(table_name)
-	p_k=cs.getPartitionkey(t)
-	st="Partition key:</br>"
-	st+='</br>'.join(j for j in p_k)
-	st+="</br>Clustering keys:</br>"
-	st+='</br>'.join(j for j in cs.getClusteringkeys(t))
+	st='{"result":"success","data":{"Partition key":'+','.join(j for j in cs.getPartitionkey(t))+'],"Clustering keys":['+','.join(j for j in cs.getClusteringkeys(t))+"]}}"
 	resp=Response(st,status=200)
 	return resp
 @app.route('/<keyspace>/<table_name>/<column>/create_index')
