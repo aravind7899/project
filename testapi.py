@@ -38,17 +38,15 @@ def createindex(keyspace,table_name,column):
 	cs.useKeyspace(keyspace)
 	t=str(table_name)
 	c=str(column)
-	st=cs.createIndex(t,c)
-	resp=Response(st,status=200)
-	return resp
+	st={"result":"success","message":cs.createIndex(t,c)}
+	return jsonify(st)
 @app.route('/<keyspace>/<table_name>/<column>/drop_index')
 def dropindex(keyspace,table_name,column):
 	cs.useKeyspace(keyspace)
 	t=str(table_name)
 	c=str(column)
-	st=cs.dropIndex(t,c)
-	resp=Response(st,status=200)
-	return resp
+	st={"result":"success","message":cs.dropIndex(t,c)}
+	return jsonify(st)
 @app.route('/<keyspace>/<table_name>/')
 def Columns(keyspace,table_name):
 	ks=str(keyspace)
@@ -59,16 +57,14 @@ def Columns(keyspace,table_name):
 @app.route('/<keyspace>/<table_name>/drop')
 def droptable(keyspace,table_name):
 	cs.useKeyspace(str(keyspace))
-	st=cs.dropTable(str(table_name))
-	resp=Response(st,status=200)
-	return resp
+	st={"result":"success","message":cs.dropTable(str(table_name))}
+	return jsonify(st)
 @app.route('/<keyspace>/<table_name>/truncate',methods=['DELETE'])
 def truncate(keyspace,table_name):
 	cs.useKeyspace(str(keyspace))
-	st=cs.truncateTable(str(keyspace),str(table_name))
 	js=cs.displayDataJSON(str(table_name))
-	resp=Response(js,status=200)
-	return resp
+	st={"result":"success","data":json.loads(js),"message":cs.truncateTable(str(table_name))}
+	return jsonify(st)
 @app.route('/<keyspace>/<table_name>/update',methods=['PUT'])
 def updateData(keyspace,table_name):
 	cs.useKeyspace(keyspace)
@@ -77,7 +73,7 @@ def updateData(keyspace,table_name):
 	data=json.loads(str(request.data))
 	js=cs.updateData(t,d,data)
 	if js=="Updated successfully!!":
-		jst={"result":"success","data":cs.displayDataJSON(t),"message":js}
+		jst={"result":"success","data":json.loads(cs.displayDataJSON(t)),"message":js}
 		return jsonify(jst)
 	else:
 		jst={"result":"failure","message":js}
@@ -91,7 +87,7 @@ def getAllDetails(keyspace,table_name):
 		jst={"result":"success","data":[]}
 		return jsonify(jst)
 	else:
-		jst={"result":"success","data":js}
+		jst={"result":"success","data":json.loads(js)}
 		return jsonify(jst)
 @app.route('/<keyspace>/<table_name>/display/',methods=['GET'])
 def getwithcondition(keyspace,table_name):
@@ -103,15 +99,15 @@ def getwithcondition(keyspace,table_name):
 		jst={"result":"success","data":[]}
 		return jsonify(jst)
 	else:
-		jst={"result":"success","data":js}
+		jst={"result":"success","data":json.loads(js)}
 		return jsonify(jst)
 @app.route('/<keyspace>/<table_name>/insert/<filename>')
 def insertFileData(keyspace,table_name,filename):
 	cs.useKeyspace(keyspace)
 	t=str(table_name)
 	f=str(filename)
-	js=cs.insertData(t,f)
-	resp = Response(js, status=200)
+	st=cs.insertData(t,f)
+	resp=Response(st,status=200)
 	return resp
 @app.route('/<keyspace>/<table_name>/insert',methods=['GET','POST'])
 def insertData(keyspace,table_name):
@@ -119,8 +115,12 @@ def insertData(keyspace,table_name):
 	t=str(table_name)
 	data=json.loads(str(request.data))
 	js=cs.insertData(t,data)
-	resp = Response(js, status=200)
-	return resp
+	if js=="Inserted data successfully!!":
+		st={"result":"success","message":js}
+		return jsonify(st)
+	else:
+		st={"result":"failure","message":js}
+		return jsonify(st)
 @app.route('/<keyspace>/<table_name>/delete',methods=['DELETE'])
 def deleteData(keyspace,table_name):
 	cs.useKeyspace(keyspace)
@@ -129,7 +129,7 @@ def deleteData(keyspace,table_name):
 	j=cs.displayDataJSON(t,d)
 	js=cs.deleteData(t,d)
 	if js=="Deleted successfully!!":
-		jst={"result":"success","data":j,"message":js}
+		jst={"result":"success","data":json.loads(j),"message":js}
 		return jsonify(jst)
 	else:
 		jst={"result":"failure","message":js}
