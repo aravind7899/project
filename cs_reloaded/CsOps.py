@@ -296,7 +296,7 @@ class CsOps:
       list1=self.getPartitionkey(table_name)
       list2=self.getClusteringkeys(table_name)
       list4=list1+list2
-      if old_column in list4:
+      if old_column not in list4:
         self.s.execute("alter table "+table_name+" rename "+old_column+" to "+new_column)
         return "Column renamed from "+old_column+"to "+new_column+" !!"
       else:
