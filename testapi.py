@@ -105,9 +105,8 @@ def insertFileData(keyspace,table_name,filename):
 	cs.useKeyspace(keyspace)
 	t=str(table_name)
 	f=str(filename)
-	st=cs.insertData(t,f)
-	resp=Response(st,status=200)
-	return resp
+	st={"message":cs.insertData(t,f)}
+	return jsonify(jst)
 @app.route('/<keyspace>/<table_name>/insert',methods=['GET','POST'])
 def insertData(keyspace,table_name):
 	cs.useKeyspace(keyspace)
