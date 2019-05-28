@@ -31,7 +31,7 @@ def getAllTables(keyspace):
 def getprkeys(keyspace,table_name):
 	cs.useKeyspace(keyspace)
 	t=str(table_name)
-	st={"result":"success","data":{"Partition key":cs.getPartitionkey(t)),"Clustering keys":cs.getClusteringkeys(t))}}
+	st={"result":"success","data":{"Partition key":cs.getPartitionkey(t),"Clustering keys":cs.getClusteringkeys(t)}}
 	return jsonify(st)
 @app.route('/<keyspace>/<table_name>/<column>/create_index')
 def createindex(keyspace,table_name,column):
