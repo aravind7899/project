@@ -8,10 +8,10 @@ cs.connect(l)
 while(True):
   d=cs.showKeyspaces()
   if len(d)>0:
-    print "the keyspaces that are already created are:"
+    print "the keyspaces that are already created are:\n**********"
     for i in d:
       print i
-    s=raw_input("Enter the choice:\nc to create keyspace\nu to use keyspace\nd to drop keyspace\nX for exit\n")
+    s=raw_input("\n**********\nEnter the choice:\nc to create keyspace\nu to use keyspace\nd to drop keyspace\nX for exit\n")
     if s=="c":
       ks=raw_input("Enter keyspace:")
       rps=raw_input("Select replication placement strategy:\n1 for SimpleStrategy \n2 for NetworkTopologyStrategy \n3 for OldNetworkTopologyStrategy\n")
@@ -24,10 +24,10 @@ while(True):
       while(True):
         t=cs.showTables(ks)
         if len(t)>0 :
-          print "There are tables existing in this keyspace.The existing tables are:"
+          print "\n**********\nThe existing tables are:"
           for i in t:
             print i
-          s=raw_input("Do you want to create a table or perform operations on existing table(c/p)[X for exit,B to get back]:")
+          s=raw_input("\n**********\nDo you want to create a table or perform operations on existing table(c/p)[X for exit,B to get back]:")
           if s=="c":
             tn=raw_input("Enter a table name:")
             print "Columm names and their datatypes of table are:"
@@ -42,21 +42,21 @@ while(True):
           elif s=='p':
             tn=raw_input("Enter table name you want to use:")
             if tn in t:
-              print "Columns:"
+              print "\n**********\nColumns:"
               for i in cs.getColumns(tn):
                 print i
-              print "Primary key:"
-              print "partition key:"
+              print "\nPrimary key:"
+              print "\nPartition key:"
               for i in cs.getPartitionkey(tn):
                 print i
-              print "clustering keys:"
+              print "\nClustering keys:"
               for i in cs.getClusteringkeys(tn):
                 print i
             else:
               print "Table does not exists!!"
               continue
             while(True):
-              ch=raw_input("Enter the choice.\nI to insert data\nU to update data\nS to display data\nD to delete data\nAt to Alter table\nDt to Drop table\nTt to Truncate table\nX to exit\nB to get back\n")
+              ch=raw_input("\n**********\nEnter the choice.\nI to insert data\nU to update data\nS to display data\nD to delete data\nAt to Alter table\nDt to Drop table\nTt to Truncate table\nX to exit\nB to get back\n")
               if ch=='I':
                 cn_i=raw_input("Enter file name:")
                 js=cs.insertData(tn,cn_i)
@@ -75,7 +75,7 @@ while(True):
                 print cs.updateData(tn,cnu_vu,cc_vc)
               elif ch=='S':
                 while(True):
-                  ch_s=raw_input("Enter choice to display data:\nDA to display whole data\nDS to display selected columns\nDA_C to display all colums with conditon\nDS_C to display selected cloumns with condition\nX to exit\nB to get back\n")
+                  ch_s=raw_input("\n**********\nEnter choice to display data:\nDA to display whole data\nDS to display selected columns\nDA_C to display all colums with conditon\nDS_C to display selected cloumns with condition\nX to exit\nB to get back\n")
                   if ch_s=="DA":
                     l=cs.displayDataJSON(tn)
                     print l
@@ -108,7 +108,7 @@ while(True):
                     print "Invalid choice"
               elif ch=='D':
                 while(True):
-                  ch_d=raw_input("Enter choice to delete data\nDS_R to delete selected columns data in a row\nDR to delete entire row\nB to get back\nX to exit\n")
+                  ch_d=raw_input("\n**********\nEnter choice to delete data\nDS_R to delete selected columns data in a row\nDR to delete entire row\nB to get back\nX to exit\n")
                   if ch_d=="DS_R":
                     c_c=raw_input("Enter conditional columns:").split(',')
                     c_v=raw_input("Enter conditional values:").split(',')
@@ -132,7 +132,7 @@ while(True):
                     print "Invalid Choice"
               elif ch=="At":
                 while(True):
-                  ch_a=raw_input("Enter choice to alter:\nAC to add column\nDC to drop column\nRC to rename column\nCD to change datatype of column(if column is newly)\nB to get back\nX to exit\n")
+                  ch_a=raw_input("\n**********\nEnter choice to alter:\nAC to add column\nDC to drop column\nRC to rename column\nCD to change datatype of column(if column is newly)\nB to get back\nX to exit\n")
                   if ch_a=="AC":
                     c_a=raw_input("Enter column to be added:")
                     dt_a=raw_input("Enter datatype of column:")
