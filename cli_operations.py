@@ -77,59 +77,20 @@ while(True):
                 while(True):
                   ch_s=raw_input("Enter choice to display data:\nDA to display whole data\nDS to display selected columns\nDA_C to display all colums with conditon\nDS_C to display selected cloumns with condition\nX to exit\nB to get back\n")
                   if ch_s=="DA":
-                    l=cs.displayData(tn)
-                    if len(l)==0:
-                      print l
-                    else:
-                      for i in l:
-                        j=0
-                        while j!=len(i):
-                          if i[j]==True:
-                            print "true",
-                          elif i[j]==False:
-                            print "false",
-                          else:
-                            print i[j],
-                          j+=1
-                        print "\n"
+                    l=cs.displayDataJSON(tn)
+                    print l
                   elif ch_s=="DS":
                     cn_s=list(raw_input("Enter columns you want to display:").split(','))
-                    l=cs.displayData(tn,cn_s)
-                    if len(l)==0:
-                      print l
-                    else:
-                      for i in l:
-                        j=0
-                        while j!=len(i):
-                          if i[j]==True:
-                            print "true",
-                          elif i[j]==False:
-                            print "false",
-                          else:
-                            print i[j],
-                          j+=1
-                        print "\n"
+                    l=cs.displayDataJSON(tn,cn_s)
+                    print l
                   elif ch_s=="DA_C":
                     c_c=raw_input("Enter conditional columns:").split(',')
                     c_v=raw_input("Enter conditional values:").split(',')
                     cc_vc=dict()
                     for i in range(len(c_c)):
                       cc_vc[c_c[i]]=c_v[i]
-                    l=cs.displayData(tn,cc_vc)
-                    if len(l)==0:
-                      print l
-                    else:
-                      for i in l:
-                        j=0
-                        while j!=len(i):
-                          if i[j]==True:
-                            print "true",
-                          elif i[j]==False:
-                            print "false",
-                          else:
-                            print i[j],
-                          j+=1
-                        print "\n"
+                    l=cs.displayDataJSON(tn,cc_vc)
+                    print l
                   elif ch_s=="DS_C":
                     cn_s=list(raw_input("Enter columns you want to display:").split(','))
                     c_c=raw_input("Enter conditional columns:").split(',')
@@ -137,21 +98,8 @@ while(True):
                     cc_vc=dict()
                     for i in range(len(c_c)):
                       cc_vc[c_c[i]]=c_v[i]
-                    l=cs.displayData(tn,cn_s,cc_vc)
-                    if len(l)==0:
-                      print l
-                    else:
-                      for i in l:
-                        j=0
-                        while j!=len(i):
-                          if i[j]==True:
-                            print "true",
-                          elif i[j]==False:
-                            print "false",
-                          else:
-                            print i[j],
-                          j+=1
-                        print "\n"
+                    l=cs.displayDataJSON(tn,cn_s,cc_vc)
+                    print l
                   elif ch_s=="X":
                     sys.exit(0)
                   elif ch_s=="B":
