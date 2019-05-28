@@ -19,9 +19,8 @@ def getAllKeyspaces():
 def createtable(keyspace):
 	cs.useKeyspace(keyspace)
 	data=json.loads(str(request.data))
-	st=cs.createTable(data)
-	resp = Response(st, status=200)
-	return resp
+	st={"result":"success","data": cs.createTable(data)}
+	return jsonify(st)
 @app.route('/<keyspace>/tables')
 def getAllTables(keyspace):
 	ks=cs.showTables(keyspace)
