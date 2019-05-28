@@ -1,4 +1,4 @@
-from flask import Flask,request,Response
+from flask import Flask,request,Response,jsonify
 from flask_cors import CORS
 import json
 import urlparse
@@ -13,9 +13,8 @@ def convertRow(Row):
 @app.route('/keyspaces')
 def getAllKeyspaces():
 	ks=cs.showKeyspaces()
-	st='{"result":"success","data":['+','.join(str(i) for i in ks)+"]}"
-	resp = Response(st, status=200)
-	return resp
+	st={"result":"success","data": ks}
+	return jsonify(st)
 @app.route('/<keyspace>/create_table',methods=['GET','POST'])
 def createtable(keyspace):
 	cs.useKeyspace(keyspace)
@@ -26,16 +25,14 @@ def createtable(keyspace):
 @app.route('/<keyspace>/tables')
 def getAllTables(keyspace):
 	ks=cs.showTables(keyspace)
-	st='{"result":"success","data":['+','.join(str(i) for i in ks)+"]}"
-	resp = Response(st, status=200)
-	return resp
+	st={"result":"success","data": ks}
+	return jsonify(st)
 @app.route('/<keyspace>/<table_name>/primary_key')
 def getprkeys(keyspace,table_name):
 	cs.useKeyspace(keyspace)
 	t=str(table_name)
-	st='{"result":"success","data":{"Partition key":'+','.join(j for j in cs.getPartitionkey(t))+'],"Clustering keys":['+','.join(j for j in cs.getClusteringkeys(t))+"]}}"
-	resp=Response(st,status=200)
-	return resp
+	st={"result":"success","data":{"Partition key":cs.getPartitionkey(t)),"Clustering keys":cs.getClusteringkeys(t))}}
+	return jsonify(st)
 @app.route('/<keyspace>/<table_name>/<column>/create_index')
 def createindex(keyspace,table_name,column):
 	cs.useKeyspace(keyspace)
@@ -57,9 +54,8 @@ def Columns(keyspace,table_name):
 	ks=str(keyspace)
 	t=str(table_name)
 	l=cs.getColumns(ks,t)
-	st='</br>'.join(j for j in l)
-	resp=Response(st,status=200)
-	return resp
+	st={"result":"success","data": l}
+	return jsonify(st)
 @app.route('/<keyspace>/<table_name>/drop')
 def droptable(keyspace,table_name):
 	cs.useKeyspace(str(keyspace))
@@ -81,26 +77,22 @@ def updateData(keyspace,table_name):
 	data=json.loads(str(request.data))
 	js=cs.updateData(t,d,data)
 	if js=="Updated successfully!!":
-		jst='{"result":"success","data":'+cs.displayDataJSON(t)+',"message":'+js+"}"
-		resp = Response(jst, status=200)
-		return resp
+		jst={"result":"success","data":cs.displayDataJSON(t),"message":js}
+		return jsonify(jst)
 	else:
-		jst='{"result":"failure","message":"'+js+'"}'
-		resp = Response(jst, status=200)
-		return resp
+		jst={"result":"failure","message":js}
+		return jsonify(jst)
 @app.route('/<keyspace>/<table_name>/display_all',methods=['GET'])
 def getAllDetails(keyspace,table_name):
 	cs.useKeyspace(keyspace)
 	t=str(table_name)
 	js=cs.displayDataJSON(t)
 	if cs.getRowCount(t)==0:
-		jst='{"result":"success","data":[]}'
-		resp = Response(jst, status=200)
-		return resp
+		jst={"result":"success","data":[]}
+		return jsonify(jst)
 	else:
-		jst='{"result":"success","data":'+js+"}"
-		resp = Response(jst, status=200)
-		return resp
+		jst={"result":"success","data":js}
+		return jsonify(jst)
 @app.route('/<keyspace>/<table_name>/display/',methods=['GET'])
 def getwithcondition(keyspace,table_name):
 	cs.useKeyspace(keyspace)
@@ -108,13 +100,11 @@ def getwithcondition(keyspace,table_name):
 	d=dict(urlparse.parse_qsl(request.query_string))
 	js=cs.displayDataJSON(t,d)
 	if cs.getRowCount(t,d)==0:
-		jst='{"result":"success","data":[]}'
-		resp = Response(jst, status=200)
-		return resp
+		jst={"result":"success","data":[]}
+		return jsonify(jst)
 	else:
-		jst='{"result":"success","data":'+js+"}"
-		resp = Response(jst, status=200)
-		return resp
+		jst={"result":"success","data":js}
+		return jsonify(jst)
 @app.route('/<keyspace>/<table_name>/insert/<filename>')
 def insertFileData(keyspace,table_name,filename):
 	cs.useKeyspace(keyspace)
@@ -139,12 +129,10 @@ def deleteData(keyspace,table_name):
 	j=cs.displayDataJSON(t,d)
 	js=cs.deleteData(t,d)
 	if js=="Deleted successfully!!":
-		jst='{"result":"success","data":'+j+',"message":"'+js+'"}'
-		resp = Response(jst, status=200)
-		return resp
+		jst={"result":"success","data":j,"message":js}
+		return jsonify(jst)
 	else:
-		jst='{"result":"failure","message":"'+js+'"}'
-		resp = Response(jst, status=200)
-		return resp
+		jst={"result":"failure","message":js}
+		return jsonify(jst)
 if __name__ == '__main__':
 	app.run(host="172.28.84.65",port=8081)
