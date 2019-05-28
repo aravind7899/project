@@ -44,8 +44,13 @@ def dropindex(keyspace,table_name,column):
 	cs.useKeyspace(keyspace)
 	t=str(table_name)
 	c=str(column)
-	st={"result":"success","message":cs.dropIndex(t,c)}
-	return jsonify(st)
+	js=cs.dropIndex(t,c)
+	if js=="Index does not exists!!":
+		st={"result":"failure","message":cs.dropIndex(t,c)}
+		return jsonify(st)
+	else:
+		st={"result":"success","message":cs.dropIndex(t,c)}
+		return jsonify(st)
 @app.route('/<keyspace>/<table_name>/')
 def Columns(keyspace,table_name):
 	ks=str(keyspace)
