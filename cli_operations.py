@@ -132,7 +132,7 @@ while(True):
                     print "Invalid Choice"
               elif ch=="At":
                 while(True):
-                  ch_a=raw_input("\n**********\nEnter choice to alter:\nAC to add column\nDC to drop column\nRC to rename column\nCD to change datatype of column(if column is newly)\nB to get back\nX to exit\n")
+                  ch_a=raw_input("\n**********\nEnter choice to alter:\nAC to add column\nDC to drop column\nRC to rename column\nB to get back\nX to exit\n")
                   if ch_a=="AC":
                     c_a=raw_input("Enter column to be added:")
                     dt_a=raw_input("Enter datatype of column:")
@@ -144,10 +144,6 @@ while(True):
                     ocn=raw_input("Enter old column name:")
                     ncn=raw_input("Enter new column name:")
                     print cs.renameColumn(tn,ocn,ncn)
-                  elif ch_a=="CD":
-                    cn=raw_input("Enter the column name:")
-                    dt=raw_input("Enter the datatype to be changed:")
-                    print cs.changeDatatype(tn,cn,dt)
                   elif ch_a=="B":
                     break
                   elif ch_a=="X":
