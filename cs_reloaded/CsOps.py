@@ -159,7 +159,7 @@ class CsOps:
     try:
       index=table_name+"_"+column+"_"+"idx"
       q_c=self.s.execute("select count(*) from system_schema.indexes where keyspace_name='"+self.ks+"' and table_name='"+table_name+"' and options={'target':'"+column+"'} ALLOW FILTERING")[0][0]
-      if q_c==1:
+      if q_c>0:
         self.s.execute("drop index "+index)
         return "Index dropped!!"
       else:
@@ -295,10 +295,9 @@ class CsOps:
     try:
       list1=self.getPartitionkey(table_name)
       list2=self.getClusteringkeys(table_name)
-      list4=list1+list2
-      if old_column not in list4:
+      if old_column in list2:
         self.s.execute("alter table "+table_name+" rename "+old_column+" to "+new_column)
-        return "Column renamed from "+old_column+"to "+new_column+" !!"
+        return "Column renamed from "+old_column+" to "+new_column+" !!"
       else:
         return "Column cannot be renamed!!"
     except Exception as e:
@@ -861,13 +860,15 @@ class CsOps:
       list4=list1+list2
       l=list(condition.keys())
       query="delete "
-      if set(columns)==set(list3):
+      if set(columns).intersection(set(list3))==set(columns):
         if len(columns)==1:
           query+=columns[-1]+" from "+table_name+" where "
         else:
           for i in columns[:-1]:
             query+=i+","
           query+=columns[-1]+" from "+table_name+" where "
+      else:
+        return "Deletion not possible!!"
       q="select count(*) from "+table_name+" where "
       if set(list4)==set(l):
         if len(l)==1:
