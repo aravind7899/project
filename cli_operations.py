@@ -1,4 +1,5 @@
 from cs_reloaded import CsOps
+import ast
 import sys
 cs=CsOps()
 ipaddress=raw_input("Enter ip address to connect:")
@@ -8,10 +9,10 @@ cs.connect(l)
 while(True):
   d=cs.showKeyspaces()
   if len(d)>0:
-    print "the keyspaces that are already created are:\n**********"
+    print "the keyspaces that are already created are:\n********************************************************************************"
     for i in d:
       print i
-    s=raw_input("\n**********\nEnter the choice:\nc to create keyspace\nu to use keyspace\nd to drop keyspace\nX for exit\n")
+    s=raw_input("\n********************************************************************************\nEnter the choice:\nc to create keyspace\nu to use keyspace\nd to drop keyspace\nX for exit\n")
     if s=="c":
       ks=raw_input("Enter keyspace:")
       rps=raw_input("Select replication placement strategy:\n1 for SimpleStrategy \n2 for NetworkTopologyStrategy \n3 for OldNetworkTopologyStrategy\n")
@@ -24,25 +25,25 @@ while(True):
       while(True):
         t=cs.showTables(ks)
         if len(t)>0 :
-          print "\n**********\nThe existing tables are:"
+          print "\n********************************************************************************\nThe existing tables are:"
           for i in t:
             print i
-          s=raw_input("\n**********\nDo you want to create a table or perform operations on existing table(c/p)[X for exit,B to get back]:")
+          s=raw_input("\n********************************************************************************\nDo you want to create a table or perform operations on existing table(c/p)[X for exit,B to get back]:")
           if s=="c":
             tn=raw_input("Enter a table name:")
             print "Columm names and their datatypes of table are:"
-            cn=raw_input("Enter Columm names:").split(',')
-            dt=raw_input("Enter datatypes for each column:").split(',')
+            cn=ast.literal_eval(raw_input("Enter Columm names:"))
+            dt=ast.literal_eval(raw_input("Enter datatypes for each column:"))
             cn_dt=dict()
             for i in range(len(cn)):
               cn_dt[cn[i]]=dt[i]
-            pk=list(raw_input("Enter column or columns which is partition key:").split(','))
-            ck=list(raw_input("Enter column/s which is clustering key:").split(','))
+            pk=ast.literal_eval(raw_input("Enter column or columns which is partition key:"))
+            ck=ast.literal_eval(raw_input("Enter column/s which is clustering key:"))
             print cs.createTable(tn,cn_dt,pk,ck)
           elif s=='p':
             tn=raw_input("Enter table name you want to use:")
             if tn in t:
-              print "\n**********\nColumns:"
+              print "\n********************************************************************************\nColumns:"
               for i in cs.getColumns(tn):
                 print i
               print "\nPrimary key:"
@@ -56,16 +57,16 @@ while(True):
               print "Table does not exists!!"
               continue
             while(True):
-              ch=raw_input("\n**********\nEnter the choice.\nI to insert data\nU to update data\nS to display data\nD to delete data\nAt to Alter table\nDt to Drop table\nTt to Truncate table\nX to exit\nB to get back\n")
+              ch=raw_input("\n********************************************************************************\nEnter the choice.\nI to insert data\nU to update data\nS to display data\nD to delete data\nAt to Alter table\nDt to Drop table\nTt to Truncate table\nX to exit\nB to get back\n")
               if ch=='I':
                 cn_i=raw_input("Enter file name:")
                 js=cs.insertData(tn,cn_i)
                 print js
               elif ch=='U':
-                cn_u=raw_input("Enter column names in which values are updated:").split(',')
-                v_u=raw_input("Enter values that are to be updated:").split(',')
-                c_c=raw_input("Enter conditional column:").split(',')
-                c_v=raw_input("Enter conditional value:").split(',')
+                cn_u=ast.literal_eval(raw_input("Enter column names in which values are updated:"))
+                v_u=ast.literal_eval(raw_input("Enter values that are to be updated:"))
+                c_c=ast.literal_eval(raw_input("Enter conditional column:"))
+                c_v=ast.literal_eval(raw_input("Enter conditional value:"))
                 cnu_vu=dict()
                 for i in range(len(cn_u)):
                   cnu_vu[cn_u[i]]=v_u[i]
@@ -75,26 +76,26 @@ while(True):
                 print cs.updateData(tn,cnu_vu,cc_vc)
               elif ch=='S':
                 while(True):
-                  ch_s=raw_input("\n**********\nEnter choice to display data:\nDA to display whole data\nDS to display selected columns\nDA_C to display all colums with conditon\nDS_C to display selected cloumns with condition\nX to exit\nB to get back\n")
+                  ch_s=raw_input("\n********************************************************************************\nEnter choice to display data:\nDA to display whole data\nDS to display selected columns\nDA_C to display all colums with conditon\nDS_C to display selected cloumns with condition\nX to exit\nB to get back\n")
                   if ch_s=="DA":
                     l=cs.displayDataJSON(tn)
                     print l
                   elif ch_s=="DS":
-                    cn_s=list(raw_input("Enter columns you want to display:").split(','))
+                    cn_s=ast.literal_eval(raw_input("Enter columns you want to display:"))
                     l=cs.displayDataJSON(tn,cn_s)
                     print l
                   elif ch_s=="DA_C":
-                    c_c=raw_input("Enter conditional columns:").split(',')
-                    c_v=raw_input("Enter conditional values:").split(',')
+                    c_c=ast.literal_eval(raw_input("Enter conditional columns:"))
+                    c_v=ast.literal_eval(raw_input("Enter conditional values:"))
                     cc_vc=dict()
                     for i in range(len(c_c)):
                       cc_vc[c_c[i]]=c_v[i]
                     l=cs.displayDataJSON(tn,cc_vc)
                     print l
                   elif ch_s=="DS_C":
-                    cn_s=list(raw_input("Enter columns you want to display:").split(','))
-                    c_c=raw_input("Enter conditional columns:").split(',')
-                    c_v=raw_input("Enter conditional values:").split(',')
+                    cn_s=ast.literal_eval(raw_input("Enter columns you want to display:"))
+                    c_c=ast.literal_eval(raw_input("Enter conditional columns:"))
+                    c_v=ast.literal_eval(raw_input("Enter conditional values:"))
                     cc_vc=dict()
                     for i in range(len(c_c)):
                       cc_vc[c_c[i]]=c_v[i]
@@ -108,18 +109,18 @@ while(True):
                     print "Invalid choice"
               elif ch=='D':
                 while(True):
-                  ch_d=raw_input("\n**********\nEnter choice to delete data\nDS_R to delete selected columns data in a row\nDR to delete entire row\nB to get back\nX to exit\n")
+                  ch_d=raw_input("\n********************************************************************************\nEnter choice to delete data\nDS_R to delete selected columns data in a row\nDR to delete entire row\nB to get back\nX to exit\n")
                   if ch_d=="DS_R":
-                    c_c=raw_input("Enter conditional columns:").split(',')
-                    c_v=raw_input("Enter conditional values:").split(',')
+                    c_c=ast.literal_eval(raw_input("Enter conditional columns:"))
+                    c_v=ast.literal_eval(raw_input("Enter conditional values:"))
                     cc_cv=dict()
                     for i in range(len(c_c)):
                       cc_cv[c_c[i]]=c_v[i]
-                    cn_d=list(raw_input("Enter column names:").split(','))
+                    cn_d=ast.literal_eval(raw_input("Enter column names:"))
                     print cs.deleteData(tn,cn_d,cc_cv)
                   elif ch_d=="DR":
-                    c_c=raw_input("Enter conditional columns:").split(',')
-                    c_v=raw_input("Enter conditional values:").split(',')
+                    c_c=ast.literal_eval(raw_input("Enter conditional columns:"))
+                    c_v=ast.literal_eval(raw_input("Enter conditional values:"))
                     cc_cv=dict()
                     for i in range(len(c_c)):
                       cc_cv[c_c[i]]=c_v[i]
@@ -132,7 +133,7 @@ while(True):
                     print "Invalid Choice"
               elif ch=="At":
                 while(True):
-                  ch_a=raw_input("\n**********\nEnter choice to alter:\nAC to add column\nDC to drop column\nRC to rename column\nB to get back\nX to exit\n")
+                  ch_a=raw_input("\n********************************************************************************\nEnter choice to alter:\nAC to add column\nDC to drop column\nRC to rename column\nB to get back\nX to exit\n")
                   if ch_a=="AC":
                     c_a=raw_input("Enter column to be added:")
                     dt_a=raw_input("Enter datatype of column:")
@@ -170,13 +171,13 @@ while(True):
           print "create a table!!"
           tn=raw_input("Enter a table name:")
           print "Columm names and their datatypes of table are:"
-          cn=raw_input("Enter Columm names:").split(',')
-          dt=raw_input("Enter datatypes for each column:").split(',')
+          cn=ast.literal_eval(raw_input("Enter Columm names:"))
+          dt=ast.literal_eval(raw_input("Enter datatypes for each column:"))
           cn_dt=dict()
           for i in range(len(cn)):
             cn_dt[cn[i]]=dt[i]
-          pk=list(raw_input("Enter column or columns which is partition key: ").split(','))
-          ck=list(raw_input("Enter column/s which is clustering key: ").split(','))
+          pk=ast.literal_eval(raw_input("Enter column or columns which is partition key: "))
+          ck=ast.literal_eval(raw_input("Enter column/s which is clustering key: "))
           print cs.createTable(tn,cn_dt,pk,ck)
           continue
     elif s=="X":
